@@ -16,6 +16,11 @@ case "$cmd" in
   init)       exec "$CORE/init.sh" "$@" ;;
   read|log)   exec "$CORE/read.sh" "$@" ;;
   week)       . "$CORE/lib.sh"; exec "$CORE/read.sh" "${1:-$(openship_project "$PWD")}" "${2:-$OPENSHIP_BRIEFING_DAYS}" ;;
+  last-day)   . "$CORE/lib.sh"; _p="${1:-$(openship_project "$PWD")}"; _f="$OPENSHIP_LOG_DIR/$_p.md"
+              if [ -s "$_f" ]; then
+                _d="$(grep -oE '^## [0-9]{4}-[0-9]{2}-[0-9]{2}' "$_f" | sed 's/^## //' | sort -r | head -1)"
+                awk -v tgt="## $_d" '$0==tgt{p=1;print;next} p&&/^## [0-9]{4}-[0-9]{2}-[0-9]{2}/{exit} p{print}' "$_f"
+              else echo "(no ship log yet for $_p)"; fi ;;
   resume)     . "$CORE/lib.sh"; _p="${1:-$(openship_project "$PWD")}"; _f="$OPENSHIP_LOG_DIR/.summary/$_p.md"
               if [ -s "$_f" ]; then exec cat "$_f"; else echo "(no summary yet for $_p)"; fi ;;
   gather)     exec "$CORE/gather.sh" "$@" ;;
@@ -41,6 +46,7 @@ openship — a git-native, agent-agnostic ship log for your work.
   openship summary <proj>         write the prose summary (body on stdin)
   openship read [proj] [days]     read the curated log (days number or "all")
   openship week [proj]            read the last-N-days changelog (briefing window)
+  openship last-day [proj]        read only the most recent dated section
   openship resume [proj]          print the prose summary (the "Resume")
   openship capture <proj> <txt>   append a raw note to the inbox
   openship idea "<txt>"           capture a spontaneous idea

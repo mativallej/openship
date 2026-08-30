@@ -59,6 +59,10 @@ printf 'the state of demo' | "$OS" summary demo >/dev/null
 assert_has "$(cat "$T/log/.summary/demo.md")" "state of demo" "summary saved"
 assert_has "$("$OS" resume demo)" "state of demo" "resume prints the summary"
 assert_has "$("$OS" week demo)"   "beta"          "week shows the last-N-days changelog"
+# last-day: only the newest dated section
+printf '### Added\n- gamma\n' | "$OS" upsert demo 2000-01-01 >/dev/null   # older section
+LD="$("$OS" last-day demo)"
+if has "$LD" "beta" && ! has "$LD" "gamma"; then ok "last-day shows only the newest section"; else bad "last-day newest only" "$LD"; fi
 
 # --- briefing: greeting + initial + project ---
 BR="$(OPENSHIP_PROJECT=demo "$OS" briefing "$repo")"

@@ -9,17 +9,9 @@
 
 > A git-native, agent-agnostic **ship log** for your work: capture what you shipped and why — at a keystroke — curate it into an OpenSpec-style changelog, get a "welcome back" briefing every session, and never lose context again. Pure shell + git + markdown. Works with Claude Code, Codex, and opencode.
 
-```
-👋 tegu-landing
-   🌿 Branch: main  ·  Uncommitted: 2 file(s)
-   🎯 Last: Wired ntfy push into the notify hook
-   📅 Last 7 days
-     2026-08-29
-       Added: phone-push notifications; /idea capture
-       Modified: project name now stable across git worktrees
-   📋 Summary
-   The notification layer moved from macOS-only to cross-platform …
-```
+![OpenShip session briefing — a pixel mascot greets you with a compact digest of recent work](docs/briefing.png)
+
+<sub>Every session opens with a "welcome back" briefing: a pixel mascot bearing your initial, your branch and uncommitted count, recent commits, and a one-line digest of the last N days.</sub>
 
 ## Introduction
 
@@ -212,6 +204,7 @@ openship upsert <proj> <date>    write a curated section (body on stdin)
 openship summary <proj>          write the prose summary (body on stdin)
 openship read [proj] [days]      read the curated log (days number or "all")
 openship week [proj]             read the last-N-days changelog (briefing window)
+openship last-day [proj]         read only the most recent dated section
 openship resume [proj]           print the prose summary (the "Resume")
 openship capture <proj> <txt>    append a raw note to the inbox
 openship idea "<txt>"            capture a spontaneous idea
@@ -220,6 +213,14 @@ openship notify <done|input> <title> <subtitle> <message>
 openship project [cwd]           print the stable project name
 openship test                    run the hermetic smoke test suite
 ```
+
+![openship help — the full command reference](docs/help.png)
+
+`openship week` reads the last-N-days changelog; `openship resume` prints the prose summary — the two pieces of the compact briefing, on demand:
+
+![openship week — the last-N-days changelog](docs/week.png)
+
+![openship resume — the prose summary](docs/resume.png)
 
 ### Claude Code
 
