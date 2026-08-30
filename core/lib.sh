@@ -38,7 +38,18 @@ openship_project() {
     common="$(git -C "$cwd" rev-parse --git-common-dir 2>/dev/null)"
     [ -n "$common" ] && common="$(cd "$cwd" 2>/dev/null && cd "$common" 2>/dev/null && pwd)"
   fi
-  if [ -n "$common" ]; then root="$(dirname "$common")"; basename "$root"; else basename "$cwd"; fi
+  if [ -n "$common" ]; then
+    root="$(dirname "$common")"
+    # per-repo override: a `.openship` file at the repo root names the project
+    # (handy when the folder name isn't what you call the project).
+    if [ -f "$root/.openship" ]; then
+      local n; n="$(head -1 "$root/.openship" 2>/dev/null | tr -d '[:space:]')"
+      [ -n "$n" ] && { printf '%s\n' "$n"; return 0; }
+    fi
+    basename "$root"
+  else
+    basename "$cwd"
+  fi
 }
 
 # Collapse to a single trimmed line, capped length.

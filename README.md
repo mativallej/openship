@@ -149,6 +149,11 @@ Everything is config, loaded from `~/.config/openship/config.sh` (or `$OPENSHIP_
 | `OPENSHIP_BRIEFING_DAYS` | `7` | How far back the briefing reads. |
 | `OPENSHIP_PROJECT` | *(auto)* | Override the auto-detected project name for the current dir. |
 
+**Per-repo name:** drop a `.openship` file at the repo root containing a single line —
+the project name — to override auto-detection for that repo. Useful when the folder
+name isn't what you call the project (precedence: `OPENSHIP_PROJECT` env > `.openship`
+file > repo folder name).
+
 ## Data Model
 
 The log is markdown under `OPENSHIP_LOG_DIR`. No database, no config server.
