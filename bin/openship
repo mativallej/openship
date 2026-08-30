@@ -1,7 +1,15 @@
 #!/usr/bin/env bash
 # OpenShip — one CLI over the core engine. Agent-agnostic: call it from any AI
 # tool (Claude Code, Codex, ...) or by hand.
-CORE="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")/../core" && pwd)"
+
+# Resolve this script's REAL path — it's usually invoked via a PATH symlink.
+_src="${BASH_SOURCE[0]:-$0}"
+while [ -h "$_src" ]; do
+  _dir="$(cd -P "$(dirname "$_src")" && pwd)"
+  _src="$(readlink "$_src")"
+  case "$_src" in /*) ;; *) _src="$_dir/$_src" ;; esac
+done
+CORE="$(cd -P "$(dirname "$_src")/../core" && pwd)"
 cmd="${1:-help}"; shift 2>/dev/null || true
 
 case "$cmd" in
