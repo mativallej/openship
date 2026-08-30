@@ -25,6 +25,7 @@ case "$cmd" in
   briefing)   exec "$CORE/briefing.sh" "$@" ;;
   project)    exec "$CORE/project.sh" "$@" ;;
   curate)     . "$CORE/lib.sh"; exec cat "$OPENSHIP_HOME/prompts/curate.md" ;;
+  test)       exec bash "$(cd -P "$CORE/.." && pwd)/tests/run.sh" "$@" ;;
   help|-h|--help)
     cat <<'EOF'
 openship — a git-native, agent-agnostic ship log for your work.
@@ -41,6 +42,7 @@ openship — a git-native, agent-agnostic ship log for your work.
   openship ideas [n]              list recent ideas
   openship notify <done|input> <title> <subtitle> <message>
   openship project [cwd]          print the stable project name
+  openship test                   run the hermetic smoke test suite
 
 Config: ~/.config/openship/config.sh   (see config.example.sh)
 EOF

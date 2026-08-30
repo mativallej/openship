@@ -216,6 +216,7 @@ openship idea "<txt>"            capture a spontaneous idea
 openship ideas [n]               list recent ideas
 openship notify <done|input> <title> <subtitle> <message>
 openship project [cwd]           print the stable project name
+openship test                    run the hermetic smoke test suite
 ```
 
 ### Claude Code
@@ -241,7 +242,14 @@ idea`.
 
 ## Contributing
 
-Contributions are welcome.
+Contributions are welcome. Run the test suite before opening a PR:
+
+```bash
+openship test        # or: bash tests/run.sh
+```
+
+The tests are hermetic (temp config + dirs, no network, no touching your real
+state), so they're safe to run anywhere.
 
 - **New agent adapters** — the core is agent-agnostic; a new adapter is a folder
   under `adapters/` that wires the CLI into that tool's lifecycle. PRs welcome.
