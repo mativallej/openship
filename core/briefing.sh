@@ -60,7 +60,7 @@ if [ -n "$LOG" ]; then
   else
     N="$(printf '%s' "$LOG" | grep -cE '^## [0-9]{4}-')"
     LATEST="$(printf '%s' "$LOG" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}' | head -1)"
-    B="$B"$'\n'"   📅 Last ${OPENSHIP_BRIEFING_DAYS} days · ${N} update(s)${LATEST:+ · latest $LATEST}  ›  openship read"
+    B="$B"$'\n'"   📅 Last ${OPENSHIP_BRIEFING_DAYS} days · ${N} update(s)${LATEST:+ · latest $LATEST}  ›  openship week · openship resume"
   fi
 fi
 

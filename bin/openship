@@ -15,6 +15,9 @@ cmd="${1:-help}"; shift 2>/dev/null || true
 case "$cmd" in
   init)       exec "$CORE/init.sh" "$@" ;;
   read|log)   exec "$CORE/read.sh" "$@" ;;
+  week)       . "$CORE/lib.sh"; exec "$CORE/read.sh" "${1:-$(openship_project "$PWD")}" "${2:-$OPENSHIP_BRIEFING_DAYS}" ;;
+  resume)     . "$CORE/lib.sh"; _p="${1:-$(openship_project "$PWD")}"; _f="$OPENSHIP_LOG_DIR/.summary/$_p.md"
+              if [ -s "$_f" ]; then exec cat "$_f"; else echo "(no summary yet for $_p)"; fi ;;
   gather)     exec "$CORE/gather.sh" "$@" ;;
   upsert)     exec "$CORE/upsert.sh" "$@" ;;
   summary)    exec "$CORE/summary.sh" "$@" ;;
@@ -37,6 +40,8 @@ openship — a git-native, agent-agnostic ship log for your work.
   openship upsert <proj> <date>   write a curated section (body on stdin)
   openship summary <proj>         write the prose summary (body on stdin)
   openship read [proj] [days]     read the curated log (days number or "all")
+  openship week [proj]            read the last-N-days changelog (briefing window)
+  openship resume [proj]          print the prose summary (the "Resume")
   openship capture <proj> <txt>   append a raw note to the inbox
   openship idea "<txt>"           capture a spontaneous idea
   openship ideas [n]              list recent ideas

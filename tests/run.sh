@@ -57,6 +57,8 @@ if has "$OUT" "beta" && ! has "$OUT" "alpha"; then ok "same-date upsert replaces
 # --- summary ---
 printf 'the state of demo' | "$OS" summary demo >/dev/null
 assert_has "$(cat "$T/log/.summary/demo.md")" "state of demo" "summary saved"
+assert_has "$("$OS" resume demo)" "state of demo" "resume prints the summary"
+assert_has "$("$OS" week demo)"   "beta"          "week shows the last-N-days changelog"
 
 # --- briefing: greeting + initial + project ---
 BR="$(OPENSHIP_PROJECT=demo "$OS" briefing "$repo")"

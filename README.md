@@ -211,6 +211,8 @@ openship curate                  print the curation prompt
 openship upsert <proj> <date>    write a curated section (body on stdin)
 openship summary <proj>          write the prose summary (body on stdin)
 openship read [proj] [days]      read the curated log (days number or "all")
+openship week [proj]             read the last-N-days changelog (briefing window)
+openship resume [proj]           print the prose summary (the "Resume")
 openship capture <proj> <txt>    append a raw note to the inbox
 openship idea "<txt>"            capture a spontaneous idea
 openship ideas [n]               list recent ideas
