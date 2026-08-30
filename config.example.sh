@@ -35,3 +35,8 @@ OPENSHIP_BANNER=""
 
 # How many days back the session briefing shows from the ship log.
 OPENSHIP_BRIEFING_DAYS=7
+
+# Briefing verbosity: "compact" (default) shows a one-line digest of the last N
+# days; "full" expands the changelog bullets and the prose summary. You can also
+# force full on demand: `openship briefing --full`.
+OPENSHIP_BRIEFING_DETAIL="compact"

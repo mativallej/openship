@@ -6,7 +6,12 @@
 #   briefing.sh [cwd]
 . "$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)/lib.sh"
 
-CWD="${1:-$PWD}"; cd "$CWD" 2>/dev/null || exit 0
+# args: [cwd] and optional --full (expand the log + summary). Default is a
+# compact digest — the systemMessage is plain text and can't truly collapse, so
+# "compact" keeps it from being a wall of text; full detail is one command away.
+CWD="$PWD"; DETAIL="${OPENSHIP_BRIEFING_DETAIL:-compact}"
+for a in "$@"; do case "$a" in --full) DETAIL=full ;; *) CWD="$a" ;; esac; done
+cd "$CWD" 2>/dev/null || exit 0
 git rev-parse --is-inside-work-tree >/dev/null 2>&1 || exit 0
 
 PROJECT="$(openship_project "$CWD")"
@@ -26,11 +31,11 @@ if [ -n "$OPENSHIP_BANNER" ] && [ -f "$OPENSHIP_BANNER" ]; then
   # power users: a custom ASCII banner replaces the character
   B=$'\n'"$(cat "$OPENSHIP_BANNER")"$'\n\n'"$GREET"$'\n'"   $SUB"
 elif [ -n "$OPENSHIP_NAME" ] || [ -n "$OPENSHIP_USER" ]; then
-  # the OpenShip mascot: a little pixel creature with your initial
-  B=" ▛▀▀▀▜"$'\n'
-  B+=" ▌▪ ▪▐   $GREET"$'\n'
-  B+=" ▌ $LETTER ▐      $SUB"$'\n'
-  B+=" ▙▄▄▄▟"$'\n'
+  # the OpenShip mascot: a little box-drawing creature with your initial
+  B=" ╭───╮"$'\n'
+  B+=" │▪ ▪│   $GREET"$'\n'
+  B+=" │ $LETTER │      $SUB"$'\n'
+  B+=" ╰┬─┬╯"$'\n'
   B+="  ╹ ╹"
 else
   B="👋 ${PROJECT}"
@@ -43,12 +48,21 @@ LASTTASK="$(grep '^- ' "$LOGDIR/.inbox/$PROJECT.md" 2>/dev/null | tail -1 | sed 
 
 [ -n "$COMMITS" ] && B="$B"$'\n'"   📝 Recent commits:"$'\n'"$COMMITS"
 
-WEEK="$("$OPENSHIP_HOME/core/read.sh" "$PROJECT" "$OPENSHIP_BRIEFING_DAYS" 2>/dev/null | grep -vE '^# ' \
-  | sed -E 's/^## (.*)/\1/; s/^### (.*)/  \1:/; s/^- /    • /' | sed '/^[[:space:]]*$/d')"
-[ -n "$WEEK" ] && B="$B"$'\n'"   📅 Last ${OPENSHIP_BRIEFING_DAYS} days"$'\n'"$(printf '%s' "$WEEK" | head -16 | sed 's/^/   /')"
-
-SUMMARY="$(cat "$LOGDIR/.summary/$PROJECT.md" 2>/dev/null)"
-[ -n "$SUMMARY" ] && B="$B"$'\n'"   📋 Summary"$'\n'"$(printf '%s' "$SUMMARY" | fold -s -w 74 | sed 's/^/   /')"
+# last-N-days + summary: compact digest by default, full detail with --full.
+LOG="$("$OPENSHIP_HOME/core/read.sh" "$PROJECT" "$OPENSHIP_BRIEFING_DAYS" 2>/dev/null)"
+if [ -n "$LOG" ]; then
+  if [ "$DETAIL" = full ]; then
+    WEEK="$(printf '%s' "$LOG" | grep -vE '^# ' \
+      | sed -E 's/^## (.*)/\1/; s/^### (.*)/  \1:/; s/^- /    • /' | sed '/^[[:space:]]*$/d')"
+    B="$B"$'\n'"   📅 Last ${OPENSHIP_BRIEFING_DAYS} days"$'\n'"$(printf '%s' "$WEEK" | sed 's/^/   /')"
+    SUMMARY="$(cat "$LOGDIR/.summary/$PROJECT.md" 2>/dev/null)"
+    [ -n "$SUMMARY" ] && B="$B"$'\n'"   📋 Summary"$'\n'"$(printf '%s' "$SUMMARY" | fold -s -w 74 | sed 's/^/   /')"
+  else
+    N="$(printf '%s' "$LOG" | grep -cE '^## [0-9]{4}-')"
+    LATEST="$(printf '%s' "$LOG" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}' | head -1)"
+    B="$B"$'\n'"   📅 Last ${OPENSHIP_BRIEFING_DAYS} days · ${N} update(s)${LATEST:+ · latest $LATEST}  ›  openship read"
+  fi
+fi
 
 IDEAS="$("$OPENSHIP_HOME/core/idea.sh" --list 3 2>/dev/null | grep '^- ' | sed -E 's/^- /    • /')"
 [ -n "$IDEAS" ] && B="$B"$'\n'"   💡 Recent ideas"$'\n'"$IDEAS"

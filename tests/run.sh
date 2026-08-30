@@ -62,7 +62,10 @@ assert_has "$(cat "$T/log/.summary/demo.md")" "state of demo" "summary saved"
 BR="$(OPENSHIP_PROJECT=demo "$OS" briefing "$repo")"
 assert_has "$BR" "Welcome back, Ada" "briefing greets by name"
 assert_has "$BR" "@ada · demo"       "briefing subtitle = @user · project"
-assert_has "$BR" " ▌ A ▐"            "briefing mascot carries the initial"
+assert_has "$BR" "│ A │"             "briefing mascot carries the initial"
+assert_has "$BR" "update(s)"          "compact briefing shows a one-line digest"
+BRF="$(OPENSHIP_PROJECT=demo "$OS" briefing "$repo" --full)"
+assert_has "$BRF" "Summary"           "--full expands the summary"
 
 # --- claude adapter installer: hermetic, preserves + idempotent ---
 export CLAUDE_CONFIG_DIR="$T/claude"; mkdir -p "$CLAUDE_CONFIG_DIR"
