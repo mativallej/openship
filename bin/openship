@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# OpenShip — one CLI over the core engine. Agent-agnostic: call it from any AI
+# tool (Claude Code, Codex, ...) or by hand.
+CORE="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")/../core" && pwd)"
+cmd="${1:-help}"; shift 2>/dev/null || true
+
+case "$cmd" in
+  init)       exec "$CORE/init.sh" "$@" ;;
+  read|log)   exec "$CORE/read.sh" "$@" ;;
+  gather)     exec "$CORE/gather.sh" "$@" ;;
+  upsert)     exec "$CORE/upsert.sh" "$@" ;;
+  summary)    exec "$CORE/summary.sh" "$@" ;;
+  capture)    exec "$CORE/capture.sh" "$@" ;;
+  idea)       exec "$CORE/idea.sh" "$@" ;;
+  ideas)      exec "$CORE/idea.sh" --list "$@" ;;
+  notify)     exec "$CORE/notify.sh" "$@" ;;
+  briefing)   exec "$CORE/briefing.sh" "$@" ;;
+  project)    exec "$CORE/project.sh" "$@" ;;
+  curate)     . "$CORE/lib.sh"; exec cat "$OPENSHIP_HOME/prompts/curate.md" ;;
+  help|-h|--help)
+    cat <<'EOF'
+openship — a git-native, agent-agnostic ship log for your work.
+
+  openship init                   interactive setup (config + wire up your AI tool)
+  openship briefing [cwd]         print the "welcome back" briefing
+  openship gather <proj> [repo]   collect today's raw material to curate
+  openship curate                 print the curation prompt (Added/Modified/Removed)
+  openship upsert <proj> <date>   write a curated section (body on stdin)
+  openship summary <proj>         write the prose summary (body on stdin)
+  openship read [proj] [days]     read the curated log (days number or "all")
+  openship capture <proj> <txt>   append a raw note to the inbox
+  openship idea "<txt>"           capture a spontaneous idea
+  openship ideas [n]              list recent ideas
+  openship notify <done|input> <title> <subtitle> <message>
+  openship project [cwd]          print the stable project name
+
+Config: ~/.config/openship/config.sh   (see config.example.sh)
+EOF
+    ;;
+  *) echo "unknown command: $cmd  (try: openship help)"; exit 1 ;;
+esac

@@ -1,0 +1,18 @@
+## OpenShip — ship log
+
+This project uses OpenShip (the `openship` CLI) to keep a living changelog.
+
+When the user asks to "ship log", "document today", or "close the day":
+
+1. Get the project name: `openship project`
+2. Gather the raw material: `openship gather <project>`
+3. Summarize into **Added / Modified / Removed** following `openship curate`
+   (the "what", not files; short bullets; real numbers or none; omit empty lists).
+4. Write the section (body on stdin):
+   `printf '%s\n' "$BODY" | openship upsert <project> <YYYY-MM-DD>`
+5. Refresh the prose summary:
+   `openship read <project> all`  then
+   `printf '%s' "$SUMMARY" | openship summary <project>`
+
+To capture a spontaneous idea: `openship idea "..."`.
+To read recent work: `openship read <project|all> <days|all>`.
