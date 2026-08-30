@@ -23,8 +23,11 @@ done
 : "${OPENSHIP_SOUND_INPUT:=/System/Library/Sounds/Funk.aiff}"
 : "${OPENSHIP_BANNER:=}"
 : "${OPENSHIP_BRIEFING_DAYS:=7}"
+: "${OPENSHIP_NAME:=}"
+: "${OPENSHIP_USER:=}"
 export OPENSHIP_LOG_DIR OPENSHIP_MIN_SECONDS OPENSHIP_NTFY_TOPIC \
-       OPENSHIP_SOUND_DONE OPENSHIP_SOUND_INPUT OPENSHIP_BANNER OPENSHIP_BRIEFING_DAYS
+       OPENSHIP_SOUND_DONE OPENSHIP_SOUND_INPUT OPENSHIP_BANNER OPENSHIP_BRIEFING_DAYS \
+       OPENSHIP_NAME OPENSHIP_USER
 
 # Stable project name across git worktrees. The identity is the MAIN worktree's
 # folder name (derived from the shared git dir), so every worktree/branch of a

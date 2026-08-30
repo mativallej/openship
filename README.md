@@ -145,7 +145,9 @@ Everything is config, loaded from `~/.config/openship/config.sh` (or `$OPENSHIP_
 | `OPENSHIP_NTFY_TOPIC` | *(empty)* | ntfy.sh topic for phone push. Empty disables push. |
 | `OPENSHIP_SOUND_DONE` | macOS Glass | Sound on task done (path; empty disables). |
 | `OPENSHIP_SOUND_INPUT` | macOS Funk | Sound when input is needed. |
-| `OPENSHIP_BANNER` | *(empty)* | Path to an ASCII banner shown atop the briefing. |
+| `OPENSHIP_NAME` | *(auto)* | Your name, used for the briefing title "Welcome back, <name>" (auto-detected from git during `init`). |
+| `OPENSHIP_USER` | *(auto)* | Your GitHub username / handle, shown as the briefing subtitle "@user · project" (auto-detected via `gh`/git during `init`). Also renders as an ASCII banner (figlet) or plain `@handle`. |
+| `OPENSHIP_BANNER` | *(empty)* | Path to a custom ASCII banner file. Takes precedence over the `OPENSHIP_USER` banner. |
 | `OPENSHIP_BRIEFING_DAYS` | `7` | How far back the briefing reads. |
 | `OPENSHIP_PROJECT` | *(auto)* | Override the auto-detected project name for the current dir. |
 
