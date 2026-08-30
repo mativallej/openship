@@ -29,7 +29,7 @@ SUB="${OPENSHIP_USER:+@$OPENSHIP_USER · }${PROJECT}"
 
 if [ -n "$OPENSHIP_BANNER" ] && [ -f "$OPENSHIP_BANNER" ]; then
   # power users: a custom ASCII banner replaces the character
-  B=$'\n'"$(cat "$OPENSHIP_BANNER")"$'\n\n'"$GREET"$'\n'"   $SUB"
+  B="$(cat "$OPENSHIP_BANNER")"$'\n\n'"$GREET"$'\n'"   $SUB"
 elif [ -n "$OPENSHIP_NAME" ] || [ -n "$OPENSHIP_USER" ]; then
   # the OpenShip mascot: a little box-drawing creature with your initial
   B=" ╭───╮"$'\n'
@@ -67,4 +67,6 @@ fi
 IDEAS="$("$OPENSHIP_HOME/core/idea.sh" --list 3 2>/dev/null | grep '^- ' | sed -E 's/^- /    • /')"
 [ -n "$IDEAS" ] && B="$B"$'\n'"   💡 Recent ideas"$'\n'"$IDEAS"
 
-printf '%s\n' "$B"
+# leading blank line so the first line (mascot top) starts on its own row —
+# some agents render "SessionStart says: <first line>" on a single line.
+printf '\n%s\n' "$B"
