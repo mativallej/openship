@@ -15,24 +15,24 @@ DIRTY="$(git status --porcelain 2>/dev/null | grep -c . | tr -d ' ')"
 COMMITS="$(git log --oneline -3 2>/dev/null | sed 's/^/       • /')"
 LOGDIR="$OPENSHIP_LOG_DIR"
 
-# banner: explicit file > figlet("@user") > plain "@user" > none
-BANNER_TXT=""
+# header: a small pixel character bearing your initial, next to the greeting.
+# initial = first letter of your name (fallback: handle), uppercased.
+LETTER="$(printf '%s' "${OPENSHIP_NAME:-${OPENSHIP_USER:-?}}" | cut -c1 | tr '[:lower:]' '[:upper:]')"
+[ -z "$LETTER" ] && LETTER='•'
+GREET="👋 Welcome back${OPENSHIP_NAME:+, $OPENSHIP_NAME}"
+SUB="${OPENSHIP_USER:+@$OPENSHIP_USER · }${PROJECT}"
+
 if [ -n "$OPENSHIP_BANNER" ] && [ -f "$OPENSHIP_BANNER" ]; then
-  BANNER_TXT="$(cat "$OPENSHIP_BANNER")"
-elif [ -n "$OPENSHIP_USER" ]; then
-  command -v figlet >/dev/null 2>&1 && BANNER_TXT="$(figlet -f small "@$OPENSHIP_USER" 2>/dev/null)"
-  [ -z "$BANNER_TXT" ] && BANNER_TXT="@$OPENSHIP_USER"
-fi
-# greeting: title "Welcome back, NAME" + subtitle "@user · project"
-if [ -n "$OPENSHIP_NAME" ]; then
-  HEADER="👋 Welcome back, ${OPENSHIP_NAME}"$'\n'"   ${OPENSHIP_USER:+@$OPENSHIP_USER · }${PROJECT}"
+  # power users: a custom ASCII banner replaces the character
+  B=$'\n'"$(cat "$OPENSHIP_BANNER")"$'\n\n'"$GREET"$'\n'"   $SUB"
+elif [ -n "$OPENSHIP_NAME" ] || [ -n "$OPENSHIP_USER" ]; then
+  # the OpenShip mascot: a little pixel creature with your initial
+  B=" ▛▀▀▀▜"$'\n'
+  B+=" ▌▪ ▪▐   $GREET"$'\n'
+  B+=" ▌ $LETTER ▐      $SUB"$'\n'
+  B+=" ▙▄╻╻▄▟"
 else
-  HEADER="👋 ${PROJECT}"
-fi
-if [ -n "$BANNER_TXT" ]; then
-  B=$'\n'"$BANNER_TXT"$'\n\n'"$HEADER"
-else
-  B="$HEADER"
+  B="👋 ${PROJECT}"
 fi
 B="$B"$'\n'"   🌿 Branch: ${BRANCH:-?}  ·  Uncommitted: ${DIRTY:-0} file(s)"
 
