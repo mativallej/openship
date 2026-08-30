@@ -30,7 +30,8 @@ elif [ -n "$OPENSHIP_NAME" ] || [ -n "$OPENSHIP_USER" ]; then
   B=" ▛▀▀▀▜"$'\n'
   B+=" ▌▪ ▪▐   $GREET"$'\n'
   B+=" ▌ $LETTER ▐      $SUB"$'\n'
-  B+=" ▙▄╻╻▄▟"
+  B+=" ▙▄▄▄▟"$'\n'
+  B+="  ╹ ╹"
 else
   B="👋 ${PROJECT}"
 fi
