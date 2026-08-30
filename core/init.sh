@@ -80,12 +80,13 @@ fi
 # agent adapter
 echo
 echo "  Which AI tool should I wire up?"
-echo "     1) Claude Code     2) Codex     3) skip"
+echo "     1) Claude Code     2) Codex     3) opencode     4) skip"
 ask AGENT "  choose" "1"
 case "$AGENT" in
-  1|claude*) bash "$OPENSHIP_HOME/adapters/claude-code/install.sh" ;;
-  2|codex*)  bash "$OPENSHIP_HOME/adapters/codex/install.sh" ;;
-  *)         echo "  (skipped agent wiring)" ;;
+  1|claude*)   bash "$OPENSHIP_HOME/adapters/claude-code/install.sh" ;;
+  2|codex*)    bash "$OPENSHIP_HOME/adapters/codex/install.sh" ;;
+  3|opencode*) bash "$OPENSHIP_HOME/adapters/opencode/install.sh" ;;
+  *)           echo "  (skipped agent wiring)" ;;
 esac
 
 echo

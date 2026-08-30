@@ -7,7 +7,7 @@
 ![Stars](https://img.shields.io/github/stars/mativallej/openship.svg)
 ![Watchers](https://img.shields.io/github/watchers/mativallej/openship.svg)
 
-> A git-native, agent-agnostic **ship log** for your work: capture what you shipped and why — at a keystroke — curate it into an OpenSpec-style changelog, get a "welcome back" briefing every session, and never lose context again. Pure shell + git + markdown. Works with Claude Code and Codex.
+> A git-native, agent-agnostic **ship log** for your work: capture what you shipped and why — at a keystroke — curate it into an OpenSpec-style changelog, get a "welcome back" briefing every session, and never lose context again. Pure shell + git + markdown. Works with Claude Code, Codex, and opencode.
 
 ```
 👋 tegu-landing
@@ -41,7 +41,7 @@ engine:
 
 It's **agent-agnostic on purpose.** The engine is pure shell + git + markdown and
 knows nothing about any AI tool. Each agent gets a thin *adapter* that wires the
-engine into its hooks. Claude Code and Codex ship in the box; adding another is a
+engine into its hooks. Claude Code, Codex, and opencode ship in the box; adding another is a
 folder.
 
 ## Key Features
@@ -64,7 +64,7 @@ folder.
 ### Prerequisites
 
 - `bash`, `git`, and [`jq`](https://jqlang.github.io/jq/) (`brew install jq` / `apt install jq`).
-- An AI coding tool: [Claude Code](https://claude.com/claude-code) or [Codex](https://github.com/openai/codex).
+- An AI coding tool: [Claude Code](https://claude.com/claude-code), [Codex](https://github.com/openai/codex), or [opencode](https://opencode.ai).
 - macOS or Linux. Phone push is optional via [ntfy.sh](https://ntfy.sh).
 
 ### Steps
@@ -128,7 +128,8 @@ openship/
 ├── prompts/curate.md           # the portable curation prompt
 ├── adapters/
 │   ├── claude-code/            # hooks + ship-log skill + /idea command + installer
-│   └── codex/                  # notify program + AGENTS.md snippet + installer
+│   ├── codex/                  # notify program + AGENTS.md snippet + installer
+│   └── opencode/               # session.idle plugin + installer
 ├── config.example.sh
 └── install.sh                  # bootstrap → openship init
 ```
@@ -222,6 +223,14 @@ gate). Hooks are merged into `~/.claude/settings.json` without touching your exi
 The adapter registers a `notify` program (capture + notify on turn complete) and
 gives you an `AGENTS.md` snippet so Codex can curate the log and capture ideas via
 the same `openship` CLI.
+
+### OpenCode
+
+The adapter installs a plugin (`~/.config/opencode/plugins/openship.js`) that runs
+on `session.idle`: it notifies and best-effort captures the finished turn to the
+inbox via the `openship` CLI. Curation always works from git even without the
+capture. Curate and capture ideas with the same CLI: `openship gather`, `openship
+idea`.
 
 ## Contributing
 
